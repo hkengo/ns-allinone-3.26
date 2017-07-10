@@ -27,12 +27,14 @@ NS_LOG_COMPONENT_DEFINE ("FirstScriptExample");
 int
 main (int argc, char *argv[])
 {
+  // コマンドライン処理機能利用
   CommandLine cmd;
   cmd.Parse (argc, argv);
-  
+
+  // データリンク層（L2）以下の設定
   Time::SetResolution (Time::NS);
-  LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_INFO);
-  LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_INFO);
+  LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_ALL);
+  LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_ALL);
 
   NodeContainer nodes;
   nodes.Create (2);
@@ -44,11 +46,12 @@ main (int argc, char *argv[])
   NetDeviceContainer devices;
   devices = pointToPoint.Install (nodes);
 
+  // ネットワーク層（L3）以上の設定
   InternetStackHelper stack;
   stack.Install (nodes);
 
   Ipv4AddressHelper address;
-  address.SetBase ("10.1.1.0", "255.255.255.0");
+  address.SetBase ("10.1.1.0", "255.255.255.0", "0.0.0.1");
 
   Ipv4InterfaceContainer interfaces = address.Assign (devices);
 
